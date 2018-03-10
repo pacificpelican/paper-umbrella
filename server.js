@@ -9,7 +9,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 
 const loki = require("lokijs");
-var db = new loki(__dirname + "/db/fowlfivehistory.json");
+
 var umbrellaJsonDb = new loki(__dirname + "/db/umbrella.json");
 
 const crypto = require('crypto');
@@ -123,7 +123,7 @@ app.prepare()
 
         if (!_collection) {
           console.log("Collection %s does not exit. Creating ...", userfiles);
-          _collection = db.addCollection(userfiles);
+          _collection = umbrellaJsonDb.addCollection(userfiles);
         }
 
         var fileList = _collection.find();
