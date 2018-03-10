@@ -88,6 +88,8 @@ class bitcoinElectrumData {
 let itemName = "btc-umb-no-" + math_floor_random_number(100000000000);
 var btcWallet = new bitcoinElectrumData(itemName);
 
+const arbitraryBtcData = get_bitcoin_testnet_keypair_array();
+
 export default class Tracker extends Component {
   state = {
     cValue: "",
@@ -103,7 +105,8 @@ export default class Tracker extends Component {
     walletprops: {},
     lookupWalletName: "",
     queryWalletName: "",
-    displayValue: {}
+    displayValue: {},
+    xyk: {}
   };
 
   constructor(props) {
@@ -127,6 +130,9 @@ export default class Tracker extends Component {
     this.xyk = new bitcoinElectrumData("no9");
     this.xyk.publicKeys = get_bitcoin_testnet_keypair_array()[1];
     this.xyk.privateKeys = get_bitcoin_testnet_keypair_array()[0];
+
+    // this.setState({xyk: this.xyk});
+
   }
 
   handlecValueChange(event) {
@@ -274,6 +280,45 @@ export default class Tracker extends Component {
       });
   }
 
+  VoidPopulateArbitraryData = () => {
+    //  btcAddressGenerator = new bitcoinElectrumData("no9");
+    console.log("getting arbitrary BTC address data");
+    var testnet = bitcoin.networks.testnet;
+  //  var keyPair = get_bitcoin_testnet_keypair_array()[0];
+    let keyPair1 = arbitraryBtcData[0];
+    let wif1 = arbitraryBtcData[1];
+    let address1 = arbitraryBtcData[2];
+
+    // let publicKey = arbitraryBtcData[0];
+    // let privateKey = arbitraryBtcData[0];
+
+    console.log(wif1);
+    console.log(address1);
+
+    this.setState({ publicKeyValue: address1, publicKeys: address1 });
+    this.setState({ privateKeys: wif1, privateKeyValue: wif1 });
+
+    // this.xyk.publicKeys = get_bitcoin_testnet_keypair_array()[1];
+    // this.xyk.privateKeys = get_bitcoin_testnet_keypair_array()[0];
+
+    // let publicKey = xyk.publicKeys;
+    // let privateKey = xyk.privateKeys;
+
+    // let updatePublicKey = (newPublicKey) =>  {
+    //   console.log("updating public key: " + newPublicKey);
+    //   let userValue = newPublicKey;
+    //   this.setState({ publicKeyValue: userValue, publicKeys: userValue });
+    // }
+
+    // updatePublicKey(publicKey)
+  
+    // handlePrivateKeyValueChange(event) {
+    //   console.log("updating private key: " + event.target.value);
+    //   let userValue = event.target.value;
+    //   this.setState({ privateKeys: userValue, privateKeyValue: userValue });
+    // }
+  }
+
   componentWillMount() {}
   componentDidMount(props) {
     const fetch = window.fetch;
@@ -367,7 +412,7 @@ export default class Tracker extends Component {
             </h2>
             <h4>title: {this.state.cVal}</h4>
             <section id="seed-h1">seed data: {this.state.sVal}</section>
-            <section>public key(s): {this.state.publicKeys}</section>
+            <section>public key(s): {this.state.publicKeys} <button onClick={this.VoidPopulateArbitraryData} id="genPubKey">generate arbitrary data</button></section>
             <section id="pk-h1">
               private key(s): {this.state.privateKeys}
             </section>
