@@ -5,7 +5,7 @@ import Head from "next/head";
 
 import bitcoin from "bitcoinjs-lib";
 import Elecwalletview from "./elecwalletview";
-const TheSistersByJamesJoyceExcerpt = `The reading of the card persuaded me that he was dead and I was disturbed to find myself at check. Had he not been dead I would have gone into the little dark room behind the shop to find him sitting in his arm-chair by the fire, nearly smothered in his great-coat. Perhaps my aunt would have given me a packet of High Toast for him and this present would have roused him from his stupefied doze. It was always I who emptied the packet into his black snuff-box for his hands trembled too much to allow him to do this without spilling half the snuff about the floor. Even as he raised his large trembling hand to his nose little clouds of smoke dribbled through his fingers over the front of his coat. It may have been these constant showers of snuff which gave his ancient priestly garments their green faded look for the red handkerchief, blackened, as it always was, with the snuff-stains of a week, with which he tried to brush away the fallen grains, was quite inefficacious. I wished to go in and look at him but I had not the courage to knock. I walked away slowly along the sunny side of the street, reading all the theatrical advertisements in the shop-windows as I went. I found it strange that neither I nor the day seemed in a mourning mood and I felt even annoyed at discovering in myself a sensation of freedom as if I had been freed from something by his death. I wondered at this for, as my uncle had said the night before, he had taught me a great deal. He had studied in the Irish college in Rome and he had taught me to pronounce Latin properly. He had told me stories about the catacombs and about Napoleon Bonaparte, and he had explained to me the meaning of the different ceremonies of the Mass and of the different vestments worn by the priest. Sometimes he had amused himself by putting difficult questions to me, asking me what one should do in certain circumstances or whether such and such sins were mortal or venial or only imperfections. His questions showed me how complex and mysterious were certain institutions of the Church which I had always regarded as the simplest acts. The duties of the priest towards the Eucharist and towards the secrecy of the confessional seemed so grave to me that I wondered how anybody had ever found in himself the courage to undertake them; and I was not surprised when he told me that the fathers of the Church had written books as thick as the Post Office Directory and as closely printed as the law notices in the newspaper, elucidating all these intricate questions. Often when I thought of this I could make no answer or only a very foolish and halting one upon which he used to smile and nod his head twice or thrice. Sometimes he used to put me through the responses of the Mass which he had made me learn by heart; and, as I pattered, he used to smile pensively and nod his head, now and then pushing huge pinches of snuff up each nostril alternately. When he smiled he used to uncover his big discoloured teeth and let his tongue lie upon his lower lip—a habit which had made me feel uneasy in the beginning of our acquaintance before I knew him well. As I walked along in the sun I remembered old Cotter’s words and tried to remember what had happened afterwards in the dream. I remembered that I had noticed long velvet curtains and a swinging lamp of antique fashion. I felt that I had been very far away, in some land where the customs were strange—in Persia, I thought.... But I could not remember the end of the dream.`
+const TheSistersByJamesJoyceExcerpt = `The reading of the card persuaded me that he was dead and I was disturbed to find myself at check. Had he not been dead I would have gone into the little dark room behind the shop to find him sitting in his arm-chair by the fire, nearly smothered in his great-coat. Perhaps my aunt would have given me a packet of High Toast for him and this present would have roused him from his stupefied doze. It was always I who emptied the packet into his black snuff-box for his hands trembled too much to allow him to do this without spilling half the snuff about the floor. Even as he raised his large trembling hand to his nose little clouds of smoke dribbled through his fingers over the front of his coat. It may have been these constant showers of snuff which gave his ancient priestly garments their green faded look for the red handkerchief, blackened, as it always was, with the snuff-stains of a week, with which he tried to brush away the fallen grains, was quite inefficacious. I wished to go in and look at him but I had not the courage to knock. I walked away slowly along the sunny side of the street, reading all the theatrical advertisements in the shop-windows as I went. I found it strange that neither I nor the day seemed in a mourning mood and I felt even annoyed at discovering in myself a sensation of freedom as if I had been freed from something by his death. I wondered at this for, as my uncle had said the night before, he had taught me a great deal. He had studied in the Irish college in Rome and he had taught me to pronounce Latin properly. He had told me stories about the catacombs and about Napoleon Bonaparte, and he had explained to me the meaning of the different ceremonies of the Mass and of the different vestments worn by the priest. Sometimes he had amused himself by putting difficult questions to me, asking me what one should do in certain circumstances or whether such and such sins were mortal or venial or only imperfections. His questions showed me how complex and mysterious were certain institutions of the Church which I had always regarded as the simplest acts. The duties of the priest towards the Eucharist and towards the secrecy of the confessional seemed so grave to me that I wondered how anybody had ever found in himself the courage to undertake them; and I was not surprised when he told me that the fathers of the Church had written books as thick as the Post Office Directory and as closely printed as the law notices in the newspaper, elucidating all these intricate questions. Often when I thought of this I could make no answer or only a very foolish and halting one upon which he used to smile and nod his head twice or thrice. Sometimes he used to put me through the responses of the Mass which he had made me learn by heart; and, as I pattered, he used to smile pensively and nod his head, now and then pushing huge pinches of snuff up each nostril alternately. When he smiled he used to uncover his big discoloured teeth and let his tongue lie upon his lower lip—a habit which had made me feel uneasy in the beginning of our acquaintance before I knew him well. As I walked along in the sun I remembered old Cotter’s words and tried to remember what had happened afterwards in the dream. I remembered that I had noticed long velvet curtains and a swinging lamp of antique fashion. I felt that I had been very far away, in some land where the customs were strange—in Persia, I thought.... But I could not remember the end of the dream.`;
 
 let crypto;
 try {
@@ -50,27 +50,41 @@ function rng() {
   return Buffer.from("zzzzzzzzzziizzzzzzzzzzzzzzzzzzzz");
 }
 
+function wrapper() {
+  //  return Buffer.from(getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30));
+  let inpString =
+    "lzzzzzzzziizzzzzzzzzzzzz" +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2);
+  return Buffer.from(inpString);
+}
+
 function get_bitcoin_testnet_keypair_array() {
-  //	deprecated
   var testnet = bitcoin.networks.testnet;
-  var keyPair = bitcoin.ECPair.makeRandom({ network: testnet, rng: rng });
+  //  let arbitrarySequence = getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30);
+
+  var keyPair = bitcoin.ECPair.makeRandom({ network: testnet, rng: wrapper });
+  //  var keyPair = bitcoin.ECPair.makeRandom({ network: testnet, rng: rng });
   var wif = keyPair.toWIF();
   var address = keyPair.getAddress();
   var keyData = [keyPair, wif, address];
   return keyData;
 }
 
-function getArbitraryWord(inpString, segment=7) {
+function getArbitraryWord(inpString, segment = 7) {
   //    if inpString is an array, crush into a string
   //  segment is the univeral word length for the purposes of this function
   let ln = inpString.length - segment;
   let position = math_floor_random_number(ln);
-  return inpString[position] + inpString[position ]
+  return inpString[position] + inpString[position];
   let retWord = ``;
-  for (let i=0; i<segment; i++) {
+  for (let i = 0; i < segment; i++) {
     // retWord[i] = inpString[i + position];
     retWord = retWord + inpString[i + position];
   }
+  console.log("retWord: " + retWord);
   return retWord;
 }
 
@@ -103,7 +117,7 @@ class bitcoinElectrumData {
 let itemName = "btc-umb-no-" + math_floor_random_number(100000000000);
 var btcWallet = new bitcoinElectrumData(itemName);
 
-const arbitraryBtcData = get_bitcoin_testnet_keypair_array();
+var arbitraryBtcData = get_bitcoin_testnet_keypair_array();
 
 export default class Tracker extends Component {
   state = {
@@ -305,9 +319,10 @@ export default class Tracker extends Component {
     let segment = 12;
 
     let retWords = ``;
-    for (let i=0; i<segment; i++) {
-    //  retWords[i] = getArbitraryWord(TheSistersByJamesJoyceExcerpt, 6);
-      retWords = retWords + " " + getArbitraryWord(TheSistersByJamesJoyceExcerpt, 6);
+    for (let i = 0; i < segment; i++) {
+      //  retWords[i] = getArbitraryWord(TheSistersByJamesJoyceExcerpt, 6);
+      retWords =
+        retWords + " " + getArbitraryWord(TheSistersByJamesJoyceExcerpt, 6);
     }
 
     console.log("made up seed: " + retWords);
@@ -315,6 +330,8 @@ export default class Tracker extends Component {
     this.setState({ publicKeyValue: address1, publicKeys: address1 });
     this.setState({ privateKeys: wif1, privateKeyValue: wif1 });
     this.setState({ sVal: retWords, sValue: retWords });
+
+    arbitraryBtcData = get_bitcoin_testnet_keypair_array();
   };
 
   componentWillMount() {}
