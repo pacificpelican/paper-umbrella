@@ -89,7 +89,6 @@ function getArbitraryWord(inpString, segment = 7) {
   }
   let ln = inpString.length - segment;
   let position = math_floor_random_number(ln);
-  return inpString[position] + inpString[position];
   let retWord = ``;
   for (let i = 0; i < segment; i++) {
     retWord = retWord + inpString[i + position];
