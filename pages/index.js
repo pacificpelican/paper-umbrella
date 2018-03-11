@@ -49,7 +49,7 @@ export default () => (
         font-family: Futura, Georgia, serif;
         color: lightgray;
       }
-      footer#terms {
+      footer#terms, footer#codelink {
         background-color: lightgray;
         border-top-right-radius: 0.7em;
         max-width: 39vw;

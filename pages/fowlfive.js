@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Link from "next/link";
 
-//  fowlfive.js crypto calulation component for Paper Umbrella 
+//  fowlfive.js crypto calculation component for Paper Umbrella 
 //  by Dan McKeown http://danmckeown.info copyright 2018 licensed under ISC license
 //  update @ v0.3.1 + cryptoCur @ v0.6.15 + paperumbrella @ v0.9.0
 
