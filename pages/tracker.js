@@ -1,10 +1,11 @@
 //  tracker.js for Paper Umbrella by http://danmckeown.info copyright 2018 licensed under ISC license
-
 import React, { Component } from "react";
 import Head from "next/head";
 
 import bitcoin from "bitcoinjs-lib";
 import Elecwalletview from "./elecwalletview";
+import Rwg from "random-word-generator";
+
 const TheSistersByJamesJoyceExcerpt = `The reading of the card persuaded me that he was dead and I was disturbed to find myself at check. Had he not been dead I would have gone into the little dark room behind the shop to find him sitting in his arm-chair by the fire, nearly smothered in his great-coat. Perhaps my aunt would have given me a packet of High Toast for him and this present would have roused him from his stupefied doze. It was always I who emptied the packet into his black snuff-box for his hands trembled too much to allow him to do this without spilling half the snuff about the floor. Even as he raised his large trembling hand to his nose little clouds of smoke dribbled through his fingers over the front of his coat. It may have been these constant showers of snuff which gave his ancient priestly garments their green faded look for the red handkerchief, blackened, as it always was, with the snuff-stains of a week, with which he tried to brush away the fallen grains, was quite inefficacious. I wished to go in and look at him but I had not the courage to knock. I walked away slowly along the sunny side of the street, reading all the theatrical advertisements in the shop-windows as I went. I found it strange that neither I nor the day seemed in a mourning mood and I felt even annoyed at discovering in myself a sensation of freedom as if I had been freed from something by his death. I wondered at this for, as my uncle had said the night before, he had taught me a great deal. He had studied in the Irish college in Rome and he had taught me to pronounce Latin properly. He had told me stories about the catacombs and about Napoleon Bonaparte, and he had explained to me the meaning of the different ceremonies of the Mass and of the different vestments worn by the priest. Sometimes he had amused himself by putting difficult questions to me, asking me what one should do in certain circumstances or whether such and such sins were mortal or venial or only imperfections. His questions showed me how complex and mysterious were certain institutions of the Church which I had always regarded as the simplest acts. The duties of the priest towards the Eucharist and towards the secrecy of the confessional seemed so grave to me that I wondered how anybody had ever found in himself the courage to undertake them; and I was not surprised when he told me that the fathers of the Church had written books as thick as the Post Office Directory and as closely printed as the law notices in the newspaper, elucidating all these intricate questions. Often when I thought of this I could make no answer or only a very foolish and halting one upon which he used to smile and nod his head twice or thrice. Sometimes he used to put me through the responses of the Mass which he had made me learn by heart; and, as I pattered, he used to smile pensively and nod his head, now and then pushing huge pinches of snuff up each nostril alternately. When he smiled he used to uncover his big discoloured teeth and let his tongue lie upon his lower lip—a habit which had made me feel uneasy in the beginning of our acquaintance before I knew him well. As I walked along in the sun I remembered old Cotter’s words and tried to remember what had happened afterwards in the dream. I remembered that I had noticed long velvet curtains and a swinging lamp of antique fashion. I felt that I had been very far away, in some land where the customs were strange—in Persia, I thought.... But I could not remember the end of the dream.`;
 
 let crypto;
@@ -16,8 +17,6 @@ try {
   let err = new Error();
   throw err;
 }
-
-const numberScale = 100000000000000;
 
 const walletQuery = "/api/getwalletlist/v/1";
 
@@ -46,27 +45,37 @@ function math_floor_random_number(scale) {
   return newdigit;
 }
 
-function rng() {
-  return Buffer.from("zzzzzzzzzziizzzzzzzzzzzzzzzzzzzz");
+function randomWord() {
+  let generator = new Rwg();
+  return generator.generate();
 }
 
 function wrapper() {
   //  return Buffer.from(getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30));
   let inpString =
-    "lzzzzzzzziizzzzzzzzzzzzz" +
-    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30) +
-    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30) +
+    "lzzzzzzzziizzzzzzz" +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
     getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
     getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2);
   return Buffer.from(inpString);
 }
 
+function crush(payload) {
+		for (var i=0; i<payload.length; i++) {
+			if ((payload[i] !== null) && (typeof payload[i] !== 'undefined')) {
+				retStr = retStr + payload[i];
+			}
+		}
+    return retStr;
+}
+
 function get_bitcoin_testnet_keypair_array() {
   var testnet = bitcoin.networks.testnet;
-  //  let arbitrarySequence = getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30);
-
   var keyPair = bitcoin.ECPair.makeRandom({ network: testnet, rng: wrapper });
-  //  var keyPair = bitcoin.ECPair.makeRandom({ network: testnet, rng: rng });
   var wif = keyPair.toWIF();
   var address = keyPair.getAddress();
   var keyData = [keyPair, wif, address];
@@ -75,14 +84,16 @@ function get_bitcoin_testnet_keypair_array() {
 
 function getArbitraryWord(inpString, segment = 7) {
   //    if inpString is an array, crush into a string
-  //  segment is the univeral word length for the purposes of this function
+  if (Array.isArray(inpString)) {
+    inpString = crush(inpString);
+  }
   let ln = inpString.length - segment;
   let position = math_floor_random_number(ln);
   return inpString[position] + inpString[position];
   let retWord = ``;
   for (let i = 0; i < segment; i++) {
-    // retWord[i] = inpString[i + position];
     retWord = retWord + inpString[i + position];
+    console.log("Adding " + inpString[i + position]);
   }
   console.log("retWord: " + retWord);
   return retWord;
@@ -320,16 +331,19 @@ export default class Tracker extends Component {
 
     let retWords = ``;
     for (let i = 0; i < segment; i++) {
-      //  retWords[i] = getArbitraryWord(TheSistersByJamesJoyceExcerpt, 6);
-      retWords =
-        retWords + " " + getArbitraryWord(TheSistersByJamesJoyceExcerpt, 6);
+      let aWord = getArbitraryWord(TheSistersByJamesJoyceExcerpt, 6);
+      console.log("aWord: " + aWord);
+      retWords = retWords + " " + aWord;
     }
 
     console.log("made up seed: " + retWords);
 
+    let randomTitle = randomWord();
+
     this.setState({ publicKeyValue: address1, publicKeys: address1 });
     this.setState({ privateKeys: wif1, privateKeyValue: wif1 });
     this.setState({ sVal: retWords, sValue: retWords });
+    this.setState({ cVal: randomTitle, cValue: randomTitle });
 
     arbitraryBtcData = get_bitcoin_testnet_keypair_array();
   };
@@ -339,8 +353,6 @@ export default class Tracker extends Component {
     const fetch = window.fetch;
 
     const obvParam = this.props.cryptocurrency;
-
-    var that = this;
 
     this.VoidUpdateWalletList();
   }
@@ -498,103 +510,103 @@ export default class Tracker extends Component {
           <meta charset="utf-8" />
         </Head>
         <style>{`
-      :root {
-        --light-color: #BAC1B8;
-        --main-bg: rgb(255, 255, 255);
-        --logo-border-color: rebeccapurple;
-        --blue-color: #D8FFDD;
-        --green-color: #0C7C59;
-        --dark-color: #2B303A;
-        --red-color: #D64933;
-        --ui-width: 80vw;
-        --bg-2: #DEDBD8;
-        --green-scheme-0: #D7FDEC;
-        --green-scheme-1: #A7F9D4;
-        --green-scheme-2: #B1E2CC;
-        --green-scheme-3: #AFCEC0;
-        --green-scheme-4: #8AA096;
-        --pink: #FECEE9;
-	  }
-	  * { 
-	  	  box-sizing: border-box;
-	  }
-		button,
-		input,
-		optgroup,
-		select,
-		textarea {
-			font-family: inherit; /* 1 */
-			font-size: 100%; /* 1 */
-			line-height: 1.15; /* 1 */
-			margin: 0; /* 2 */
-		}
-    div.cryptoTracker {
-      width: var(--ui-width);
-      background-color: var(--green-scheme-0, lightgreen);
-      padding-left: 0.4em;
-      padding-right: 0.3em;
-	  }
-	  div.cryptoInfoDisplay input {
-		  backgroud-color: floralWhite;
-		  min-width: 38vw;
-	  }
-	  div.cryptoInfoDisplay {
-      margin-left: 0.4em;
-      margin-right: 0.3em;
-      padding-left: 0.4em;
-      padding-right: 0.3em;
-      font-family: Helvetica, "Lucida Sans", "Ubuntu Sans", "Roboto", sans-serif;
-      background-color: var(--green-scheme-2);
-	  }
-	  h6#sysPW {
-		  background-color: #b0cdfc;
-	  }
-	  div.cryptoTrackerTitleDiv {
-		  font-family: "Hack", "Fira Code", Menlo, monospace;
-	  }
-	  div#walletslist {
-      background-color: var(--green-scheme-1);
-      border-top-right-radius: 4em;
-	  }
-	  div#adjustQuery {
-		font-family: "Anonymous Pro", "Fira Code", Menlo, monospace;
-	  }
-	  input#lookup, input#save {
-      background-color: var(--pink, pink);
-      width: 300px;
-      height: 50px;
-	  }
-	  div#wltview {
-		  background-color: floralWhite;
-	  }
-	  span.cryptoWalletVal {
-      font-family: 'VT323', monospace;
-      font-size: 28px;
-	  }
-	  .smallHeadline {
-		  font-family: Helvetica, Roboto, "Segoe UI", "Ubuntu", "Anonymous Pro", "Fira Code", Menlo, monospace;
-	  }
-	  section.cryptoInfoDisplay--title section {
-      font-family: Helvetica, "Lucida Sans", "Ubuntu Sans", "Roboto", sans-serif;
-      margin-bottom: 14px;
-	  }
-	  h2 a {
-		  text-decoration: none;
-		  color: darkblue;
-	  }
-	  div.cryptoTracker, div.cryptoInfoDisplay, h6#sysPW {
-		  border-top-right-radius: 3rem;
-	  }
-	  div.cryptoInfoDisplay{
-      border-bottom-right-radius: 0.4rem;
-    }
-	  h6#sysPW, div.cryptoTracker {
-		  border-bottom-right-radius: 3rem;
-	  }
-	  span.cryptoWalletVal a {
-      text-decoration: none;
-      color: black;
-	  }
+        :root {
+          --light-color: #BAC1B8;
+          --main-bg: rgb(255, 255, 255);
+          --logo-border-color: rebeccapurple;
+          --blue-color: #D8FFDD;
+          --green-color: #0C7C59;
+          --dark-color: #2B303A;
+          --red-color: #D64933;
+          --ui-width: 80vw;
+          --bg-2: #DEDBD8;
+          --green-scheme-0: #D7FDEC;
+          --green-scheme-1: #A7F9D4;
+          --green-scheme-2: #B1E2CC;
+          --green-scheme-3: #AFCEC0;
+          --green-scheme-4: #8AA096;
+          --pink: #FECEE9;
+	      }
+        * { 
+          box-sizing: border-box;
+        }
+        button,
+        input,
+        optgroup,
+        select,
+        textarea {
+          font-family: inherit; /* 1 */
+          font-size: 100%; /* 1 */
+          line-height: 1.15; /* 1 */
+          margin: 0; /* 2 */
+        }
+        div.cryptoTracker {
+          width: var(--ui-width);
+          background-color: var(--green-scheme-0, lightgreen);
+          padding-left: 0.4em;
+          padding-right: 0.3em;
+        }
+        div.cryptoInfoDisplay input {
+          backgroud-color: floralWhite;
+          min-width: 38vw;
+        }
+        div.cryptoInfoDisplay {
+          margin-left: 0.4em;
+          margin-right: 0.3em;
+          padding-left: 0.4em;
+          padding-right: 0.3em;
+          font-family: Helvetica, "Lucida Sans", "Ubuntu Sans", "Roboto", sans-serif;
+          background-color: var(--green-scheme-2);
+        }
+        h6#sysPW {
+          background-color: #b0cdfc;
+        }
+        div.cryptoTrackerTitleDiv {
+          font-family: "Hack", "Fira Code", Menlo, monospace;
+        }
+        div#walletslist {
+          background-color: var(--green-scheme-1);
+          border-top-right-radius: 4em;
+        }
+        div#adjustQuery {
+          font-family: "Anonymous Pro", "Fira Code", Menlo, monospace;
+        }
+        input#lookup, input#save {
+          background-color: var(--pink, pink);
+          width: 300px;
+          height: 50px;
+        }
+        div#wltview {
+          background-color: floralWhite;
+        }
+        span.cryptoWalletVal {
+          font-family: 'VT323', monospace;
+          font-size: 28px;
+        }
+        .smallHeadline {
+          font-family: Helvetica, Roboto, "Segoe UI", "Ubuntu", "Anonymous Pro", "Fira Code", Menlo, monospace;
+        }
+        section.cryptoInfoDisplay--title section {
+          font-family: Helvetica, "Lucida Sans", "Ubuntu Sans", "Roboto", sans-serif;
+          margin-bottom: 14px;
+        }
+        h2 a {
+          text-decoration: none;
+          color: darkblue;
+        }
+        div.cryptoTracker, div.cryptoInfoDisplay, h6#sysPW {
+          border-top-right-radius: 3rem;
+        }
+        div.cryptoInfoDisplay{
+          border-bottom-right-radius: 0.4rem;
+        }
+        h6#sysPW, div.cryptoTracker {
+          border-bottom-right-radius: 3rem;
+        }
+        span.cryptoWalletVal a {
+          text-decoration: none;
+          color: black;
+        }
     `}</style>
       </div>
     );

@@ -1,4 +1,4 @@
-//  server.js for mlBench by http://danmckeown.info copyright 2018
+//  server.js for Paper Umbrella by http://danmckeown.info copyright 2018 licesned under ISC License
 
 const express = require('express')
 const next = require('next')

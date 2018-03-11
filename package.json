@@ -1,6 +1,6 @@
 {
   "name": "paperumbrella",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
@@ -17,6 +17,7 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "bitcoinjs-lib": "^3.3.1",
-    "lokijs": "^1.5.2"
+    "lokijs": "^1.5.2",
+    "random-word-generator": "^0.9.9"
   }
 }
