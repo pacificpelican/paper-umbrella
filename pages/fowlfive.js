@@ -286,7 +286,6 @@ export default class Fowlfive extends Component {
     const obvParam = this.props.cryptocurrency;
 
     var that = this;
-  //  let dest = cryptoURLformat + "/" + obvParam + "/";
 
     var abitcoinArry = this.getCryptoData("bitcoin");
     var ethereumArray = this.getCryptoData("ethereum");

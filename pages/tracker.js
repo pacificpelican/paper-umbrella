@@ -24,7 +24,7 @@ function createMarkup(inner) {
   return { __html: inner };
 }
 
-const updateDOM = function(dataset, inpSel = "input#nameinput") {
+const updateDOM = function (dataset, inpSel = "input#nameinput") {
   document.getElementById(inpSel).value = dataset;
 };
 
@@ -51,9 +51,12 @@ function randomWord() {
 }
 
 function wrapper() {
-  //  return Buffer.from(getArbitraryWord(TheSistersByJamesJoyceExcerpt, 30));
   let inpString =
-    "lzzzzzzzziizzzzzzz" +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 10) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
+    getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
     getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
     getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
     getArbitraryWord(TheSistersByJamesJoyceExcerpt, 2) +
@@ -65,12 +68,12 @@ function wrapper() {
 }
 
 function crush(payload) {
-		for (var i=0; i<payload.length; i++) {
-			if ((payload[i] !== null) && (typeof payload[i] !== 'undefined')) {
-				retStr = retStr + payload[i];
-			}
-		}
-    return retStr;
+  for (var i = 0; i < payload.length; i++) {
+    if ((payload[i] !== null) && (typeof payload[i] !== 'undefined')) {
+      retStr = retStr + payload[i];
+    }
+  }
+  return retStr;
 }
 
 function get_bitcoin_testnet_keypair_array() {
@@ -83,7 +86,6 @@ function get_bitcoin_testnet_keypair_array() {
 }
 
 function getArbitraryWord(inpString, segment = 7) {
-  //    if inpString is an array, crush into a string
   if (Array.isArray(inpString)) {
     inpString = crush(inpString);
   }
@@ -252,10 +254,10 @@ export default class Tracker extends Component {
     console.log("about to Fetch: " + theRequest);
 
     fetch(theRequest)
-      .then(function(response) {
+      .then(function (response) {
         return response.blob();
       })
-      .then(function(myBlob) {
+      .then(function (myBlob) {
         var el = document.getElementById("pks");
         el.value = "_";
         var el3 = document.getElementById("pk-h1");
@@ -272,7 +274,7 @@ export default class Tracker extends Component {
   VoidUpdateWalletList() {
     var that = this;
     fetch(walletQuery, {})
-      .then(function(response) {
+      .then(function (response) {
         if (response.ok) {
           console.log("response ok");
           console.log(response.json);
@@ -285,7 +287,7 @@ export default class Tracker extends Component {
         throw new Error("API did not respond.");
         return response.blob();
       })
-      .then(function(myReturn) {
+      .then(function (myReturn) {
         console.log(myReturn);
 
         that.setState({ displayValue: myReturn });
@@ -297,7 +299,7 @@ export default class Tracker extends Component {
     let ret = [];
     var urlForName = "/api/view/v/1/name/" + theName + "/pswd/" + thePassword;
     fetch(urlForName, {})
-      .then(function(response) {
+      .then(function (response) {
         if (response.ok) {
           console.log("response ok");
           console.log(response.json);
@@ -310,7 +312,7 @@ export default class Tracker extends Component {
         throw new Error("Network did not respond.");
         return response.blob();
       })
-      .then(function(myReturn) {
+      .then(function (myReturn) {
         console.log(myReturn);
         that.setState({ walletprops: myReturn });
       });
@@ -347,7 +349,7 @@ export default class Tracker extends Component {
     arbitraryBtcData = get_bitcoin_testnet_keypair_array();
   };
 
-  componentWillMount() {}
+  componentWillMount() { }
   componentDidMount(props) {
     const fetch = window.fetch;
 

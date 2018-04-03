@@ -3,8 +3,8 @@ export default ({ walletprops }) => (
   <div id="wltview">
     <h2 id="elecWalletViewh2">Electrum ₿ Wallet {walletprops.name}</h2>
     <ul id="elecwalletlist">
-      <li>public keys: {walletprops.publicKeys}</li>
-      <li>private keys: {walletprops.privateKeys}</li>
+      <li>public key(s): {walletprops.publicKeys}</li>
+      <li>private key(s): {walletprops.privateKeys}</li>
       <li>seed data: {walletprops.seed}</li>
     </ul>
     <style>{`
